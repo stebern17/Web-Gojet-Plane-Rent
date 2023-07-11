@@ -1,0 +1,52 @@
+<?php
+    session_start(); // Memulai session PHP
+    require 'koneksi/koneksi.php'; // Mengimpor file koneksi.php
+    include 'header.php'; // Mengimpor file header.php
+
+    $id = strip_tags($_GET['id']); // Mengambil nilai dari parameter 'id' yang dikirim melalui metode GET dan membersihkannya dari tag HTML yang tidak diinginkan
+    $hasil = $koneksi->query("SELECT * FROM privat_jet WHERE id_jet = '$id'")->fetch(); // Melakukan query untuk mendapatkan data privat_jet berdasarkan id_jet yang diberikan dan mengambil satu baris hasil query
+?>
+<div class="container mt-5">
+<div class="row">
+    <div class="col-sm-6">
+        <img class="card-img-top w-100" 
+            style="object-fit:cover;" 
+            src="assets/image/<?php echo $hasil['gambar'];?>" alt="">
+    </div>
+    <div class="col-sm-6">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title"><?php echo $hasil['merk'];?></h4>
+                <p class="card-text">
+                    Deskripsi :
+                    <?php echo $hasil['deskripsi'];?>
+                </p>
+                <ul class="list-group list-group-flush">
+                    <?php if($hasil['status'] == 'Tersedia'){?>
+                    <li class="list-group-item bg-primary text-white">
+                        <i class="fa fa-check"></i> Available
+                    </li>
+                    <?php }else{?>
+                    <li class="list-group-item bg-danger text-white">
+                        <i class="fa fa-close"></i> Not Available
+                    </li>
+                    <?php }?>
+                    <li class="list-group-item bg-info text-white"><i class="fa fa-check"></i> Free Maintenance</li>
+                    <li class="list-group-item bg-dark text-white">
+                        <i class="fa fa-money"></i> Rp. <?php echo number_format($hasil['harga']);?>/ day
+                    </li>
+                </ul>
+                <hr/>
+                <center>
+                    <a href="booking.php?id=<?php echo $hasil['id_jet'];?>" class="btn btn-success">Booking now!</a>
+                    <a href="index.php" class="btn btn-info">Back</a>
+                </center>
+            </div>
+         </div> 
+    </div>
+</div>
+</div>
+
+
+<?php include 'footer.php';?>
+
